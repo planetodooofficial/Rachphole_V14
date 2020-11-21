@@ -48,7 +48,7 @@
                 <form string="Select Location">
                     <group>
                         <field name="location_id"/>
-                        <field name="sale_order_id"/>
+                        <field name="sale_order_id" invisible="1"/>
                     </group>
                     <footer>
                         <button name="confirm_sale_order" string="Confirm" class="oe_right oe_highlight"
