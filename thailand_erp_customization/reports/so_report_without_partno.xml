@@ -1,0 +1,13 @@
+<odoo>
+    <data>
+        <report
+                id="action_report_saleorder_without_partno"
+                string="Quotation / Order Without Part No."
+                model="sale.order"
+                report_type="qweb-pdf"
+                file="thailand_erp_customization.report_saleorder_without_partno"
+                name="thailand_erp_customization.report_saleorder_without_partno"
+                print_report_name="(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or 'Order - %s' % (object.name)"
+                paperformat="thailand_erp_customization.my_new_paper_format"/>
+    </data>
+</odoo>

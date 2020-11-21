@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="inherit_purchase_order_form_view">
+        <field name="name">inherit.purchase.order.form.view</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_ref']" position="after">
+                <field name="outsource"/>
+                <field name="approved_by_engineer" attrs="{'invisible': [('outsource','=',False)]}"/>
+            </xpath>
+
+            <xpath expr="//field[@name='amount_untaxed']" position="after">
+                <field name="discount"/>
+            </xpath>
+
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name="project_id" invisible="1"/>
+                <field name="project_ids" widget="many2many_tags" />
+            </xpath>
+             <xpath expr="//page//field[@name='order_line']//tree//field[@name='product_id']" position="before">
+                <field name="sale_order_id" readonly="0" force_save="1" />
+                <field name="project_id" required="1"/>
+                <field name="destination_location" required="1"/>
+            </xpath>
+        </field>
+    </record>
+
+
+    <!--    <record model="ir.ui.view" id="inherit_po_form_id">-->
+    <!--        <field name="name">inherit.purchase.order.form</field>-->
+    <!--        <field name="model">purchase.order</field>-->
+    <!--        <field name="inherit_id" ref="purchase.purchase_order_form"/>-->
+    <!--        <field name="arch" type="xml">-->
+    <!--            <xpath expr="//field[@name='partner_ref']" position="after">-->
+    <!--                <field name="outsource_po"/>-->
+    <!--                <field name="approved_by_eng" attrs="{'invisible': [('outsource_po', '=', False)]}"/>-->
+    <!--            </xpath>-->
+
+    <!--            <xpath expr="//button[@name='action_view_invoice'][1]" position="attributes">-->
+    <!--                <attribute name="attrs">{'invisible': ['|', ('state', 'not in', ('purchase', 'done')), '|',-->
+    <!--                    ('invoice_status', 'in', ('no', 'invoiced')), '&amp;', ('approved_by_eng', '=', False),-->
+    <!--                    ('outsource_po', '=', True)]}-->
+    <!--                </attribute>-->
+    <!--            </xpath>-->
+
+    <!--            <xpath expr="//button[@name='action_view_invoice'][2]" position="attributes">-->
+    <!--                <attribute name="attrs">{'invisible': ['|', '|', ('state', 'not in', ('purchase', 'done')),-->
+    <!--                    ('invoice_status', 'not in', ('no', 'invoiced')), '|', ('order_line', '=', []), '&amp;',-->
+    <!--                    ('approved_by_eng', '=', False), ('outsource_po', '=', True)]}-->
+    <!--                </attribute>-->
+    <!--            </xpath>-->
+    <!--        </field>-->
+    <!--    </record>-->
+
+    <record id="purchase_order_paper_format" model="report.paperformat">
+        <field name="name">Purchase Order paperformat</field>
+        <field name="format">Letter</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">70</field>
+        <field name="margin_bottom">40</field>
+        <field name="margin_left">7</field>
+        <field name="margin_right">7</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">66</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <record id="purchase.action_report_purchase_order" model="ir.actions.report">
+        <field name="paperformat_id" ref="thailand_erp_customization.purchase_order_paper_format" />
+    </record>
+</odoo>

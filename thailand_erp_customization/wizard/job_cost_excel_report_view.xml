@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="get_jobcost_report_wizard_view" model="ir.ui.view">
+        <field name="name">get_job_cost_report</field>
+        <field name="model">job.cost.excel.report</field>
+        <field name="arch" type="xml">
+            <form string="Job Cost Report">
+                <group>
+                    <field name="job_cost_excel_file_name" invisible="1"/>
+                    <field name="job_cost_excel_file" readonly="1" filename="job_cost_excel_file_name"/>
+                </group>
+                <footer>
+                    <button special="cancel" string="Cancel" class="oe_highlight"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

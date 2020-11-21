@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="get_so_report_wizard_view" model="ir.ui.view">
+        <field name="name">get_so_report</field>
+        <field name="model">so.excel.report</field>
+        <field name="arch" type="xml">
+            <form string="Sale Quotation / Order Report">
+                <group>
+                    <group>
+                        <field name="so_file_name" invisible="1"/>
+                        <field name="so_excel_file" readonly="1" filename="so_file_name"/>
+
+                        <field name="boq_file_name" invisible="1"/>
+                        <field name="boq_excel_file" readonly="1" filename="boq_file_name"/>
+                    </group>
+                    <group>
+                        <field name="boq_child_file_name" invisible="1"/>
+                        <field name="boq_child_excel_file" readonly="1" filename="boq_child_file_name"/>
+                    </group>
+                </group>
+                <footer>
+                    <button special="cancel" string="Cancel" class="oe_highlight"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

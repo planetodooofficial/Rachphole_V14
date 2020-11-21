@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="confirm_sale_order" model="ir.ui.view">
+            <field name="name">confirm_sale_order</field>
+            <field name="model">confirm.sale.order.wiz</field>
+            <field name="arch" type="xml">
+                <form string="Confirm Sale Order">
+                    <group>
+                        <field name="so_ids" nolabel="1">
+                            <tree editable="bottom" create="false" delete="false">
+                                <field name="so_id" readonly="1"/>
+                                <field name="so_state" readonly="1"/>
+                            </tree>
+                        </field>
+                    </group>
+<!--                    <footer>-->
+<!--                        <button name="confirm_sale_order" string="Confirm" class="oe_right oe_highlight"-->
+<!--                                type="object"/>-->
+<!--                        <button special="cancel" string="Cancel" class="oe_right" type="object"/>-->
+<!--                    </footer>-->
+                </form>
+            </field>
+        </record>
+
+        <act_window id="action_confirm_sale_order"
+                    name="Confirm Sale Order"
+                    binding_model="sale.order"
+                    res_model="confirm.sale.order.wiz"
+                    binding_views="list"
+                    view_mode="form"
+                    target="new"/>
+<!--        <record id="action_confirm_sale_order" model="ir.actions.act_window">-->
+<!--            <field name="name">Confirm Sale Order</field>-->
+<!--            <field name="type">ir.actions.act_window</field>-->
+<!--            <field name="res_model">confirm.sale.order.wiz</field>-->
+<!--            <field name="view_mode">form</field>-->
+<!--            &lt;!&ndash;            <field name="view_id" ref="thailand_erp_customization.confirm_sale_order"/>&ndash;&gt;-->
+<!--            <field name="context">{}</field>-->
+<!--            <field name="target">new</field>-->
+<!--            <field name="binding_view_types">list</field>-->
+<!--        </record>-->
+
+        <record id="confirm_sale_order_loc" model="ir.ui.view">
+            <field name="name">confirm_sale_order_loc</field>
+            <field name="model">sale.order.loc.wiz</field>
+            <field name="arch" type="xml">
+                <form string="Select Location">
+                    <group>
+                        <field name="location_id"/>
+                        <field name="sale_order_id"/>
+                    </group>
+                    <footer>
+                        <button name="confirm_sale_order" string="Confirm" class="oe_right oe_highlight"
+                                type="object"/>
+                        <button special="cancel" string="Cancel" class="oe_right" type="object"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>

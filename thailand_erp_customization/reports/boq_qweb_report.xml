@@ -1,0 +1,64 @@
+<odoo>
+    <data>
+        <report
+            string="BOQ"
+            id="action_boq_custom"
+            model="sale.order"
+            report_type="qweb-pdf"
+            name="thailand_erp_customization.report_boq_id"
+            file="thailand_erp_customization.report_boq_id"
+            print_report_name="'BOQ - %s' % (object.name)"
+        />
+
+        <report
+            string="BOQ Without Part No."
+            id="action_boq_without_partno_custom"
+            model="sale.order"
+            report_type="qweb-pdf"
+            name="thailand_erp_customization.report_boq_without_partno_id"
+            file="thailand_erp_customization.report_boq_without_partno_id"
+            print_report_name="'BOQ - %s' % (object.name)"
+        />
+
+        <report
+            string="BOQ Child With Part No. &amp; Price"
+            id="action_boq_with_partno_price"
+            model="sale.order"
+            report_type="qweb-pdf"
+            name="thailand_erp_customization.boq_child_with_part_price"
+            file="thailand_erp_customization.boq_child_with_part_price"
+            print_report_name="'BOQ - %s' % (object.name)"
+        />
+
+        <report
+            string="BOQ Child Without Part No. &amp; Without Price"
+            id="action_boq_withoutpart_withoutprice"
+            model="sale.order"
+            report_type="qweb-pdf"
+            name="thailand_erp_customization.boq_child_withoutpart_withoutprice"
+            file="thailand_erp_customization.boq_child_withoutpart_withoutprice"
+            print_report_name="'BOQ - %s' % (object.name)"
+        />
+
+        <report
+            string="BOQ Child Without Part No. &amp; With Price"
+            id="action_boq_withoutpart_withprice"
+            model="sale.order"
+            report_type="qweb-pdf"
+            name="thailand_erp_customization.boq_child_withoutpart_withprice"
+            file="thailand_erp_customization.boq_child_withoutpart_withprice"
+            print_report_name="'BOQ - %s' % (object.name)"
+        />
+
+        <report
+            string="BOQ Child With Part No. &amp; Without Price"
+            id="action_boq_withpart_withoutprice"
+            model="sale.order"
+            report_type="qweb-pdf"
+            name="thailand_erp_customization.boq_child_withpart_withoutprice"
+            file="thailand_erp_customization.boq_child_withpart_withoutprice"
+            print_report_name="'BOQ - %s' % (object.name)"
+        />
+
+    </data>
+</odoo>

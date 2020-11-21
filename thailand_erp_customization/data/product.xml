@@ -1,0 +1,40 @@
+<odoo>
+    <data noupdate="1">
+        <record id="document_id" model="product.product">
+            <field name="name">Document</field>
+            <field name="type">service</field>
+        </record>
+        <record id="engineering_id" model="product.product">
+            <field name="name">Engineering</field>
+            <field name="type">service</field>
+        </record>
+        <record id="man" model="product.product">
+            <field name="name">Man</field>
+            <field name="type">service</field>
+        </record>
+        <record id="day" model="product.product">
+            <field name="name">Day</field>
+            <field name="type">service</field>
+        </record>
+        <record id="mh" model="product.product">
+            <field name="name">MH</field>
+            <field name="type">service</field>
+        </record>
+        <record id="hotel" model="product.product">
+            <field name="name">Hotel</field>
+            <field name="type">service</field>
+        </record>
+        <record id="allowance" model="product.product">
+            <field name="name">Allowance</field>
+            <field name="type">service</field>
+        </record>
+        <record id="mobilize" model="product.product">
+            <field name="name">Mobilize</field>
+            <field name="type">service</field>
+        </record>
+        <record id="car_rent" model="product.product">
+            <field name="name">Car rent</field>
+            <field name="type">service</field>
+        </record>
+    </data>
+</odoo>

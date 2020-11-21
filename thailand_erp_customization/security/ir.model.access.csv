@@ -1,0 +1,15 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_bill_of_quantities,access_bill_of_quantities,model_bill_of_quantities,,1,1,1,1
+access_document.sale.order,document.sale.order,model_document_sale_order,,1,1,1,1
+access_engineering.line,access_engineering.line,model_engineering_line,,1,1,1,1
+access_job.cost,access_job.cost,model_job_cost,,1,1,1,1
+access_payment.details,access_payment.details,model_payment_details,,1,1,1,1
+access_budget.details,access_budget.details,model_budget_details,,1,1,1,1
+access_warrant.term,access_warrant.term,model_warrant_term,,1,1,1,1
+access_bom.details,access_bom.details,model_bom_details,,1,1,1,1
+access_confirm.sale.order.wiz,access_confirm.sale.order.wiz,model_confirm_sale_order_wiz,,1,1,1,1
+access_sale.order.loc.wiz,access_sale.order.loc.wiz,model_sale_order_loc_wiz,,1,1,1,1
+access_sale.order.wiz.line,access_sale.order.wiz.line,model_sale_order_wiz_line,,1,1,1,
+access_job.cost.sale.order,access_job.cost.sale.order,model_job_cost_sale_order,,1,1,1,1
+access_job.cost.purchase.order,access_job.cost.purchase.order,model_job_cost_purchase_order,,1,1,1,1
+

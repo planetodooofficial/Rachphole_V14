@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="inherit_sale_quotation_report" inherit_id="sale.report_saleorder_document">
+        <!--        <xpath expr="//div[@class='page']" position="before">-->
+        <!--            <style type="text/css">-->
+        <!--                &lt;!&ndash;                        #product tr:nth-child(even){background-color: #f2f2f2;}&ndash;&gt;-->
+        <!--                #product{-->
+        <!--                border-collapse: collapse;-->
+        <!--                }-->
+
+        <!--                table, th, td {-->
+        <!--                border: 1px solid black;-->
+        <!--                }-->
+        <!--            </style>-->
+        <!--        </xpath>-->
+
+        <xpath expr="//p[@t-field='doc.note']" position="replace">
+            <div></div>
+        </xpath>
+
+        <xpath expr="//t[@t-set='address']" position="replace">
+            <div class="row"></div>
+        </xpath>
+
+        <xpath expr="//h2" position="replace">
+            <div></div>
+        </xpath>
+
+        <xpath expr="//div[@id='informations']" position="replace">
+            <div class="row mt32 mb32" id="informations">
+                <div t-if="doc.validity_date and doc.state in ['draft', 'sent']" class="col-auto mw-100 mb-2" name="expiration_date">
+                </div>
+            </div>
+        </xpath>
+
+
+        <xpath expr="//div[@name='so_total_summary']" position="replace">
+            <div class="row">
+
+                <div class="col-8" style="font-family:Calibri;font-size:13px">
+                    <strong>Commercial Condition</strong><br></br>
+                    1. Currency:&amp;nbsp;<t t-if="doc.company_id.currency_id.name == 'THB'">Baht</t><t t-else="else"><span t-field="doc.company_id.currency_id.name"></span></t><br/>
+                    2. Delivery:&amp;nbsp;<span t-field="doc.delivery"></span><br/>
+                    <table>
+                        <tr>
+                            <td style="width:160px">3. Term Of Payment:</td>
+                            <td style="width:420px">
+                                <span t-field="doc.payment_term_id.name"></span>
+                                <t t-if="doc.note"><br/><span t-field="doc.note"/></t>
+                            </td>
+                        </tr>
+                    </table>
+                    4. Warranty:&amp;nbsp;<t t-if="doc.warranty_period and doc.warranty_period_type"><span t-field="doc.warranty_period" />&amp;nbsp;<span t-field="doc.warranty_period_type"/></t>
+                </div>
+
+                <div class="clearfix col-4" name="so_total_summary">
+                    <div id="total" name="total" style="font-family:Arial;font-size:14px">
+                        <!--                        <div style="width:500px" t-attf-class="#{'col-4' if report_type != 'html' else 'col-sm-7 col-md-5'} ml-auto">-->
+
+                        <table class="table table-sm">
+                            <tr style="font-size: 12px;padding: 1px;">
+                                <td style="padding: 1px;" name="td_amount_label"><strong>Subtotal</strong></td>
+                                <td style="padding: 1px;" name="td_amount" class="text-right">
+                                    <span t-esc="'{0:,.2f}'.format(doc.total_without_disc)"/>
+                                </td>
+                            </tr>
+                            <!--                            <tr style="">-->
+                            <!--                                <td name="td_disc_perc_label">Discount(%)</td>-->
+                            <!--                                <td name="td_disc_perc" class="text-right">-->
+                            <!--                                    <span t-esc="'%.2f'% doc.disc_perc"/>%-->
+                            <!--                                </td>-->
+                            <!--                            </tr>-->
+                            <tr style="font-size: 12px;padding: 1px;">
+                                <td style="padding: 1px;" name="td_discount_label">Discount</td>
+                                <td style="padding: 1px;" name="td_discount_amt" class="text-right">
+                                    <span t-esc="'{0:,.2f}'.format(total_disc_amt)" />
+                                </td>
+                            </tr>
+                            <tr style="font-size: 12px;padding: 1px;">
+                                <td style="padding: 1px;" name="td_amount_withdisc_label"><strong>Total Net</strong></td>
+                                <td style="padding: 1px;" name="td_amount_withdisc" class="text-right">
+                                    <span t-esc="'{0:,.2f}'.format(doc.amount_untaxed)"/>
+                                </td>
+                            </tr>
+                            <tr style="font-size: 12px;padding: 1px;">
+                                <td style="padding: 1px;" name="td_tax_perc_label">Tax/VAT Rate</td>
+                                <td style="padding: 1px;" name="td_tax_perc" class="text-right">
+                                    <span t-esc="'%.2f'% doc.tax_vat_perc"/>%
+                                </td>
+                            </tr>
+                            <tr style="font-size: 12px;padding: 1px;">
+                                <td style="padding: 1px;" name="td_tax_amt_label">Tax/VAT</td>
+                                <td style="padding: 1px;" name="td_tax_amt" class="text-right">
+                                    <span t-esc="'{0:,.2f}'.format(doc.amount_tax)"/>
+                                </td>
+                            </tr>
+                            <tr style="font-size: 12px;padding: 1px;" class="border-black o_total">
+                                <td style="padding: 1px;" name="td_amount_total_label"><strong>Grand Total</strong></td>
+                                <td style="padding: 1px;" name="td_amount_total" class="text-right">
+                                    <span t-esc="'{0:,.2f}'.format(doc.amount_total)"/>
+                                </td>
+                            </tr>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </xpath>
+
+        <xpath expr="//p[@t-if='doc.payment_term_id.note']" position="replace">
+            <!--            <div style="font-family:Calibri;font-size:16px">-->
+            <!--                <strong>Commercial Condition</strong><br></br>-->
+            <!--                1. Currency:&amp;nbsp;<t t-if="doc.company_id.currency_id.name == 'THB'">Baht</t><t t-else="else"><span t-field="doc.company_id.currency_id.name"></span></t><br/>-->
+            <!--                2. Delivery:&amp;nbsp;<span t-field="doc.delivery"></span><br/>-->
+            <!--                <table>-->
+            <!--                    <tr>-->
+            <!--                        <td style="width:160px">3. Term Of Payment:</td>-->
+            <!--                        <td style="width:420px">-->
+            <!--                            <span t-field="doc.payment_term_id.name"></span>-->
+            <!--                            <t t-if="doc.note"><br/><span t-field="doc.note"/></t>-->
+            <!--                        </td>-->
+            <!--                    </tr>-->
+            <!--                </table>-->
+            <!--                4. Warranty:&amp;nbsp;<t t-if="doc.warranty_period and doc.warranty_period_type"><span t-field="doc.warranty_period" />&amp;nbsp;<span t-field="doc.warranty_period_type"/></t>-->
+            <!--            </div>-->
+            <br/>
+
+            <table id="signature">
+                <tr>
+                    <td style="width:540px;font-family: Arial; font-size: 13px">Please confirm your acceptance of this quote by signing this document</td>
+                    <td><p style="font-family: Arial; font-size: 13px;color: #b2b2b2; width: 300px; border-bottom: 1px solid #b2b2b2">Signature</p></td>
+                </tr>
+                <tr>
+                    <td style="width:540px;font-family: Arial; font-size: 13px;">Once signed, please Fax, mail or e-mail it to the provided address.</td>
+                    <td><p style="font-family: Arial; font-size: 13px;color: #b2b2b2; width: 300px;border-bottom: 1px solid #b2b2b2">Print Name</p></td>
+                </tr>
+                <tr>
+                    <td style="width:540px;"></td>
+                    <td><p style="font-family: Arial; font-size: 13px;color: #b2b2b2; width: 300px;border-bottom: 1px solid #b2b2b2">Date</p></td>
+                </tr>
+            </table>
+
+        </xpath>
+
+        <xpath expr="//div[@name='signature']" position="replace">
+            <div t-if="doc.signature" class="mt32 ml64 mr4" name="signature"></div>
+        </xpath>
+
+        <xpath expr="//table[@class='table table-sm o_main_table']" position="replace">
+            <table class="table table-sm o_main_table" id="product" style="font-family:Arial;font-size:14px; border-collapse: collapse;border: 1px solid black;">
+                <thead>
+                    <tr t-attf-style="padding: 1px;font-size: 12px;font-family:Arial; color: white; background-color:#004269">
+                        <th style="padding: 1px;border: 1px solid black;font-size: 12px;font-family:Arial; color: white; background-color:#004269" name="th_item_no" class="text-center">Item</th>
+                        <th style="padding: 1px;border: 1px solid black;font-size: 12px;font-family:Arial; color: white; background-color:#004269" name="th_description" class="text-left">Description</th>
+                        <th style="padding: 1px;border: 1px solid black;font-size: 12px;width:185px;font-family:Arial; color: white; background-color:#004269" name="th_partno" class="text-left">Part No.</th>
+                        <th style="padding: 1px;border: 1px solid black;font-size: 12px;font-family:Arial; color: white; background-color:#004269" name="th_quantity" class="text-center">Qty.</th>
+                        <th style="padding: 1px;border: 1px solid black;font-size: 12px;font-family:Arial; color: white; background-color:#004269" name="th_unit" class="text-center">Unit</th>
+                        <th style="padding: 1px;border: 1px solid black;width:95px;font-size: 12px;font-family:Arial; color: white; background-color:#004269" name="th_priceunit" class="text-right">Unit Price</th>
+                        <!--                        <th style="font-size: 15px;font-family:Arial; color: white; background-color:#004269" name="th_discount" t-if="display_discount" class="text-right" groups="product.group_discount_per_so_line">-->
+                        <!--                            <span>Discount</span>-->
+                        <!--                        </th>-->
+                        <!--                        <th style="font-size: 15px;font-family:Arial; color: white; background-color:#004269" name="th_taxes" class="text-right">Taxes</th>-->
+                        <th style="padding: 1px;border: 1px solid black;width:95px;font-size: 12px;font-family:Arial; color: white; background-color:#004269" name="th_subtotal" class="text-right">
+                            <t groups="account.group_show_line_subtotals_tax_excluded">Line Total</t>
+                            <t groups="account.group_show_line_subtotals_tax_included">Total Price</t>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="sale_tbody">
+
+                    <t t-set="current_note_subtotal" t-value="0"/>
+                    <t t-set="original_total" t-value="0"/>
+                    <t t-set="diff" t-value="0"/>
+                    <t t-set="prod_disc_amt" t-value="0"/>
+                    <t t-set="discount" t-value="0"/>
+                    <t t-set="current_subtotal" t-value="0"/>
+                    <t t-set="item_no" t-value="1"/>
+                    <t t-set="total_disc_amt" t-value="0"/>
+                    <t t-set="total_amt" t-value="0"/>
+                    <t t-set="total_amt_with_disc" t-value="0"/>
+
+                    <t t-foreach="doc.order_line" t-as="line">
+                        <t t-set="total_amt" t-value="total_amt + (line.product_uom_qty * line.price_unit)"/>
+                        <t t-set="total_amt_with_disc" t-value="total_amt_with_disc + (line.price_subtotal)"/>
+
+                        <t t-set="prod_disc_amt" t-value="(line.product_uom_qty * line.price_unit * line.discount) / 100" groups="product.group_discount_per_so_line"/>
+                        <t t-set="original_total" t-value="original_total + (line.price_unit * line.product_uom_qty)"/>
+<!--                        <t t-set="current_note_subtotal" t-value="current_note_subtotal + line.price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>-->
+<!--                        <t t-set="current_note_subtotal" t-value="current_note_subtotal + line.price_total" groups="account.group_show_line_subtotals_tax_included"/>-->
+                        <t t-set="current_note_subtotal" t-value="current_note_subtotal + (line.product_uom_qty * line.price_unit)"/>
+                        <t t-set="current_subtotal" t-value="current_subtotal + (line.product_uom_qty * line.price_unit)"/>
+<!--                        <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>-->
+<!--                        <t t-set="current_subtotal" t-value="current_subtotal + line.price_total" groups="account.group_show_line_subtotals_tax_included"/>-->
+
+                        <!--                        <tr t-att-class="'bg-200 font-weight-bold o_line_section' if line.display_type == 'line_section' else 'font-italic o_line_note' if line.display_type == 'line_note' else ''">-->
+                        <tr style="font-family:Arial;padding: 1px;font-size: 12px;" t-att-class="'bg-200 font-weight-bold o_line_section' if line.display_type == 'line_section' else ''">
+                            <t t-if="not line.display_type and line.type == 'product'">
+<!--                            <t t-if="not line.display_type and line.type != 'boq' and line.type != 'boq_child'">-->
+<!--                                <t t-if="line.name != 'Document' and line.name != 'Engineering'">-->
+                                    <t t-set="product_name" t-value="line.name"/>
+                                    <t t-if="product_name.find(']') != -1">
+                                        <t t-set="product_name" t-value="(product_name).split('] ', 1)[1]"/>
+                                    </t>
+
+                                    <td style="padding: 1px;border: 1px solid black;" name="td_item_no" class="text-center">
+                                        <span t-esc="item_no"/>
+                                    </td>
+                                    <td style="padding: 1px;border: 1px solid black;" name="td_name">
+                                        <span t-esc="product_name"/>
+                                    </td>
+                                    <td style="padding: 1px;border: 1px solid black;" name="td_partno">
+                                        <span t-field="line.product_id.default_code"/>
+                                    </td>
+                                    <td style="padding: 1px;border: 1px solid black;" name="td_quantity" class="text-center">
+                                        <span t-esc="int(line.product_uom_qty)"/>
+                                        <!--                                        <span t-field="line.product_uom" groups="uom.group_uom"/>-->
+                                    </td>
+                                    <td style="padding: 1px;border: 1px solid black;" name="td_unit" class="text-center">
+                                        <t t-if="line.product_uom">
+                                            <span t-field="line.product_uom"/>
+                                        </t>
+                                    </td>
+                                    <td style="padding: 1px;border: 1px solid black;" name="td_priceunit" class="text-right">
+                                        <span t-esc="'{0:,.2f}'.format(line.price_unit)"/>
+                                    </td>
+                                    <!--                                    <td t-if="display_discount" class="text-right" groups="product.group_discount_per_so_line">-->
+                                    <!--                                        &lt;!&ndash;                                        <span t-field="line.discount"/>&ndash;&gt;-->
+                                    <!--                                        <span t-esc="prod_disc_amt"/>-->
+                                    <!--                                    </td>-->
+                                    <!--                                    <td name="td_taxes" class="text-right">-->
+                                    <!--                                        <span t-esc="', '.join(map(lambda x: (x.description or x.name), line.tax_id))"/>-->
+                                    <!--                                    </td>-->
+                                    <td style="padding: 1px;border: 1px solid black;" name="td_subtotal" class="text-right o_price_total">
+                                        <span t-esc="'{0:,.2f}'.format(line.product_uom_qty * line.price_unit)"/>
+<!--                                        <span t-esc="'{0:,.2f}'.format(line.price_subtotal)" groups="account.group_show_line_subtotals_tax_excluded"/>-->
+<!--                                        <span t-esc="'{0:,.2f}'.format(line.price_total)" groups="account.group_show_line_subtotals_tax_included"/>-->
+                                    </td>
+
+                                    <t t-set="prod_disc_amt" t-value="0"/>
+                                    <t t-set="item_no" t-value="item_no + 1"/>
+<!--                                </t>-->
+                            </t>
+                            <t t-if="line.display_type == 'line_section'">
+                                <!--                                <t t-set="line_unit" t-value="JOB"/>-->
+                                <t t-set="line_name" t-value="(line.name).split('[')[0]"/>
+
+                                <!--            <t t-set="amount" t-value="line.name"/>-->
+                                <!--            <t t-set="amount" t-value="amount.split(': ')[1]"/>-->
+                                <!--            <t t-set="amount" t-value="amount.split(']')[0]"/>-->
+
+                                <!--                                <td name="td_section_line" colspan="99"><span t-esc="line_name"/></td>-->
+                                <td style="padding: 1px;border: 1px solid black;" name="td_section_item_no" class="text-center">
+                                    <t t-if="line.type != 'product'">
+                                        <span t-esc="item_no"/>
+                                        <t t-set="item_no" t-value="item_no + 1"/>
+                                    </t>
+                                    <t t-else="else">
+                                        <span>&amp;nbsp;</span>
+                                    </t>
+                                </td>
+                                <td style="padding: 1px;border: 1px solid black;" name="td_section_name">
+                                    <t t-if="line.type == 'boq_child'">
+                                        <span>Hardware (REF BOQ)</span>
+                                    </t>
+                                    <t t-elif="line.type == 'eng'">
+                                        <span>Engineering</span>
+                                    </t>
+                                    <t t-elif="line.type == 'doc'">
+                                        <span>Document</span>
+                                    </t>
+                                    <t t-elif="line.type == 'boq'">
+                                        <span>Hardware (Refer BOQ)</span>
+                                    </t>
+                                    <t t-else="else">
+                                        <span t-field="line.name"/>
+                                    </t>
+                                    <!--                                    <t t-else="else">-->
+                                    <!--                                        <span t-esc="line_name"/>-->
+                                    <!--                                    </t>-->
+                                </td>
+                                <td style="padding: 1px;border: 1px solid black;" name="td_section_part"/>
+                                <td style="padding: 1px;border: 1px solid black;" name="td_section_quantity" class="text-center">
+                                    <t t-if="line.type != 'product'">1</t>
+                                    <t t-else="else">
+                                        <span>&amp;nbsp;</span>
+                                    </t>
+                                </td>
+                                <td style="padding: 1px;border: 1px solid black;" name="td_section_unit" class="text-center">
+                                    <t t-if="line.type=='eng' or line.type=='doc'">
+                                        <span>JOB</span>
+                                    </t>
+                                    <t t-if="line.type=='boq'">
+                                        <span>SET</span>
+                                    </t>
+                                    <t t-if="line.type=='boq_child'">
+                                        <span>LOT</span>
+                                    </t>
+                                </td>
+                                <td style="padding: 1px;border: 1px solid black;" name="td_section_unit_price" class="text-right"></td>
+                                <!--                                <td t-if="display_discount" class="text-right"></td>-->
+                                <td style="padding: 1px;border: 1px solid black;" name="td_section_price_subtotal" class="text-right"></td>
+
+
+                                <t t-set="current_section" t-value="line"/>
+                                <t t-set="current_subtotal" t-value="0"/>
+                            </t>
+                            <t t-if="line.display_type == 'line_note'">
+                                <t t-if="(not line.type == 'boq') and line.type != 'boq_child'">
+                                    <td style="padding: 1px;border: 1px solid black;" name="td_note_no">
+                                    </td>
+                                    <td style="padding: 1px;border: 1px solid black;" name="td_note_line_name">
+                                        <span t-field="line.name"/>
+                                    </td>
+                                    <td style="padding: 1px;border: 1px solid black;" name="td_note_part"/>
+                                    <td style="padding: 1px;border: 1px solid black;" name="td_note_line_quantity" class="text-center">
+                                    </td>
+                                    <td style="padding: 1px;border: 1px solid black;" name="td_note_line_unit" class="text-center">
+                                    </td>
+                                    <td style="padding: 1px;border: 1px solid black;" name="td_note_line_unit_price" class="text-right"></td>
+                                    <!--                                    <td t-if="display_discount" class="text-right"></td>-->
+                                    <td style="padding: 1px;border: 1px solid black;" name="td_note_line_price_subtotal" class="text-right"></td>
+
+
+
+                                    <!--                                    <td name="td_note_line" colspan="99">-->
+                                    <!--                                        <span t-field="line.name"/>-->
+                                    <!--                                    </td>-->
+                                </t>
+                                <t t-if="line.type == 'boq'">
+                                    <t t-set="current_note" t-value="line"/>
+                                    <t t-set="current_note_subtotal" t-value="0"/>
+                                    <t t-set="original_total" t-value="0"/>
+                                    <t t-set="diff" t-value="0"/>
+                                    <t t-set="discount" t-value="0"/>
+                                </t>
+                            </t>
+
+
+
+                            <t t-if="current_note and line.type == 'boq'">
+                                <t t-if="line_last or doc.order_line[line_index+1].display_type == 'line_note' or (line.type == 'boq' and doc.order_line[line_index+1].type != 'boq')">
+<!--                                    <t t-set="diff" t-value="original_total - current_note_subtotal"/>-->
+<!--                                    <t t-set="discount" t-value="diff/original_total * 100"/>-->
+
+                                    <!--                                <tr>-->
+                                    <td style="padding: 1px;border: 1px solid black;" name="td_note_item_no"></td>
+                                    <td style="padding: 1px;border: 1px solid black;" name="td_note_name">
+                                        <span t-esc="current_note.name"/>
+                                    </td>
+                                    <td style="padding: 1px;border: 1px solid black;" name="td_note_part"/>
+                                    <td style="padding: 1px;border: 1px solid black;" name="td_note_quantity" class="text-center"/>
+                                    <td style="padding: 1px;border: 1px solid black;" name="td_note_unit" class="text-center"/>
+                                    <td style="padding: 1px;border: 1px solid black;" name="td_note_unit_price" class="text-right"/>
+                                    <!--                                    <td t-if="display_discount" class="text-right">-->
+                                    <!--                                        <span t-esc="diff"-->
+                                    <!--                                              t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>-->
+                                    <!--                                    </td>-->
+                                    <!--                                    <td name="td_note_taxes" class="text-right"></td>-->
+                                    <td style="padding: 1px;border: 1px solid black;" name="td_note_subtotal" class="text-right">
+                                        <span t-esc="'{0:,.2f}'.format(current_note_subtotal)"/>
+                                        <!--                                                t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'-->
+                                        <!--                                        />-->
+                                    </td>
+                                    <!--                                </tr>-->
+
+
+                                    <!--                    <tr class="is-subtotal text-left">-->
+                                    <!--                        <td name="td_note_subtotal" colspan="99">-->
+                                    <!--                            <span t-esc="current_note.name"/>-->
+                                    <!--                            <span t-esc="round(discount,2)" style="float:right"/>-->
+                                    <!--                            <span-->
+                                    <!--                                    t-esc="current_note_subtotal"-->
+                                    <!--                                    style="float:right;"-->
+                                    <!--                                    t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'-->
+                                    <!--                            />-->
+                                    <!--                        </td>-->
+                                    <!--                        &lt;!&ndash;                        <td name="td_note_name">&ndash;&gt;-->
+                                    <!--                        &lt;!&ndash;                           <span t-esc="current_note.name"/>&ndash;&gt;-->
+                                    <!--                        &lt;!&ndash;                        </td>&ndash;&gt;-->
+                                    <!--                        &lt;!&ndash;                        <td name="td_note_quantity" class="text-right"/>&ndash;&gt;-->
+                                    <!--                        &lt;!&ndash;                        <td name="td_note_unit_price" class="text-right"/>&ndash;&gt;-->
+                                    <!--                        &lt;!&ndash;                        <td t-if="td_note_discount" class="text-right" groups="product.group_discount_per_so_line">&ndash;&gt;-->
+                                    <!--                        &lt;!&ndash;                            <span t-esc="original_total" style="float:right"/>&ndash;&gt;-->
+                                    <!--                        &lt;!&ndash;                        </td>&ndash;&gt;-->
+                                    <!--                        &lt;!&ndash;                        <td name="td_note_taxes" class="text-right"></td>&ndash;&gt;-->
+                                    <!--                        &lt;!&ndash;                        <td name="td_note_subtotal" class="text-right">&ndash;&gt;-->
+                                    <!--                        &lt;!&ndash;                            <span&ndash;&gt;-->
+                                    <!--                        &lt;!&ndash;                                    t-esc="current_note_subtotal"&ndash;&gt;-->
+                                    <!--                        &lt;!&ndash;                                    style="float:right;"&ndash;&gt;-->
+                                    <!--                        &lt;!&ndash;                                    t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'&ndash;&gt;-->
+                                    <!--                        &lt;!&ndash;                            />&ndash;&gt;-->
+                                    <!--                        &lt;!&ndash;                        </td>&ndash;&gt;-->
+                                    <!--                    </tr>-->
+                                    <t t-set="current_note_subtotal" t-value="0"/>
+                                    <t t-set="original_total" t-value="0"/>
+                                    <t t-set="diff" t-value="0"/>
+                                    <t t-set="discount" t-value="0"/>
+                                </t>
+                            </t>
+                        </tr>
+
+                        <t t-if="current_section and (line_last or doc.order_line[line_index+1].display_type == 'line_section' or (doc.order_line[line_index+1].type != current_section.type and doc.order_line[line_index+1].display_type != 'line_note'))">
+                            <tr style="font-family:Arial;padding: 1px;font-size: 12px;" class="is-subtotal text-right">
+                                <td style="padding: 1px;border-top: 1px solid black;border-left: 1px solid black;"/>
+                                <td style="padding: 1px;border-top: 1px solid black;"/>
+                                <td style="padding: 1px;border-top: 1px solid black;"/>
+                                <td style="padding: 1px;border-top: 1px solid black;" class="text-right"/>
+                                <td style="padding: 1px;border-top: 1px solid black;" class="text-right"/>
+                                <td style="padding: 1px;border-top: 1px solid black;" class="text-right">
+                                    <strong>Subtotal</strong>
+                                </td>
+                                <td style="padding: 1px;border-top: 1px solid black;border-right: 1px solid black;" name="td_section_subtotal">
+                                    <span t-esc="'{0:,.2f}'.format(current_subtotal)"/>
+                                </td>
+
+
+                                <!--                                <td style="border: 1px solid black;" name="td_section_subtotal" colspan="99">-->
+                                <!--                                    <strong class="mr16">Subtotal</strong>-->
+                                <!--                                    <span t-esc="'%.2f'% current_subtotal"/>-->
+                                <!--                                    &lt;!&ndash;                                            t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'&ndash;&gt;-->
+                                <!--                                    &lt;!&ndash;                                    />&ndash;&gt;-->
+                                <!--                                </td>-->
+                                <t t-set="current_section" t-value=""/>
+                            </tr>
+                        </t>
+                    </t>
+                    <t t-set="total_disc_amt" t-value="total_amt - total_amt_with_disc"/>
+                </tbody>
+            </table>
+        </xpath>
+
+    </template>
+</odoo>

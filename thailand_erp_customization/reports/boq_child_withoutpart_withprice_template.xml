@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_boq_withoutpart_withprice_template">
+        <t t-call="web.basic_layout">
+            <t t-foreach="docs" t-as="doc">
+                <div class="page">
+                    <div class="oe_structure"/>
+
+                    <div class="row" style="font-weight: bold;font-family: Arial;color: white; background-color: #004269;font-size: 24px; margin-left:10px;margin-right:10px;">
+                        BOQ HARDWARE
+                    </div>
+
+                    <div class="row" style="font-family: Arial;font-size: 12px; margin-left:10px;margin-right:10px; padding: 5px;">
+                        <strong><span t-field="doc.name"/></strong>
+                    </div>
+                    <br/>
+                    <div class="row" style="font-size: 18px; margin-left:10px;margin-right:10px;">
+                        <table style="border: 1px solid black border-collapse: collapse;border-top: none!important;" class="col-12" >
+                            <thead>
+                                <tr t-attf-style="font-size: 9px;font-family:Segoe UI; color: white; background-color:#004269">
+                                    <th rowspan="2" style="border: 1px solid black; padding: 5px;" name="th_item" class="text-left">NO.</th>
+                                    <th rowspan="2" style="border: 1px solid black; padding: 5px;" name="th_description" class="text-left">DESCRIPTION</th>
+<!--                                    <th rowspan="2" style="border: 1px solid black; padding: 5px;" name="th_function" class="text-left">FUNCTION</th>-->
+                                    <th rowspan="2" style="border: 1px solid black; padding: 5px;" name="th_unit" class="text-center">UNIT</th>
+                                    <th rowspan="2" style="border: 1px solid black; padding: 5px;" name="th_quantity" class="text-center">QTY</th>
+                                    <th rowspan="2" style="border: 1px solid black; padding: 5px;" name="th_manufacturing" class="text-center">MANUFACTURING</th>
+                                    <th rowspan="2" style="border: 1px solid black; padding: 5px;" name="th_priceunit" class="text-right">PRICE</th>
+                                    <th rowspan="2" style="border: 1px solid black; padding: 5px;" name="th_subtotal" class="text-right">AMOUNT</th>
+                                </tr>
+                            </thead>
+
+                            <tbody class="boq_tbody">
+                                <t t-set="note_count" t-value="0"/>
+                                <t t-set="item_no" t-value="1"/>
+                                <!--                    <t t-set="current_subtotal" t-value="0"/>-->
+
+                                <t t-foreach="doc.bom_details_id" t-as="line">
+
+                                    <!--                        <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>-->
+                                    <!--                        <t t-set="current_subtotal" t-value="current_subtotal + line.price_total" groups="account.group_show_line_subtotals_tax_included"/>-->
+
+                                    <tr t-att-class="'bg-200 font-weight-bold o_line_section' if line.display_type == 'line_section' else 'font-italic o_line_note' if line.display_type == 'line_note' else ''">
+                                        <t t-if="not line.display_type and doc.add_child_prod">
+                                            <td style="font-size: 11px;font-family:Arial; border: 1px solid black;border-bottom: none!important; padding: 5px;" name="td_no">
+                                                <span t-esc="item_no"/>
+                                            </td>
+
+                                            <td style="font-size: 11px;font-family:Arial; border: 1px solid black;border-bottom: none!important; padding: 5px;" name="td_name">
+                                                <span t-field="line.product_id.name"/>
+                                            </td>
+<!--                                            <td style="font-size: 11px;font-family:Arial; border: 1px solid black;border-top: none; border-bottom: none!important; padding: 5px;" name="td_function" class="text-left">-->
+<!--                                                <span t-field="line.function"/>-->
+<!--                                            </td>-->
+<!--                                            <td style="font-size: 11px;font-family:Arial; border: 1px solid black; border-bottom: none!important; padding: 5px;" name="td_part_no" class="text-left">-->
+<!--                                                <span t-field="line.product_id.default_code"/>-->
+<!--                                            </td>-->
+                                            <td style="font-size: 11px;font-family:Arial; border: 1px solid black; border-bottom: none!important; padding: 5px;" name="td_unit" class="text-center">
+                                                <span t-field="line.product_uom"/>
+                                            </td>
+                                            <td style="font-size: 11px;font-family:Arial; border: 1px solid black; border-bottom: none!important; padding: 5px;" name="td_quantity" class="text-center">
+                                                <span t-esc="int(line.product_qty)"/>
+                                            </td>
+                                            <td style="font-size: 11px;font-family:Arial; border: 1px solid black; border-bottom: none!important; padding: 5px;" name="td_quantity" class="text-center">
+                                                <span t-field="line.product_id.manufacturing"/>
+                                            </td>
+                                            <td style="font-size: 11px;font-family:Arial; border: 1px solid black; border-bottom: none!important; padding: 5px;" name="td_priceunit" class="text-right">
+                                                <span t-esc="'{0:,.2f}'.format(line.product_cost_price)"/>
+                                            </td>
+                                            <td style="font-size: 11px;font-family:Arial; border: 1px solid black; border-bottom: none!important; padding: 5px;" name="td_subtotal" class="text-right">
+                                                <span t-esc="'{0:,.2f}'.format(line.product_subtotal)"/>
+                                            </td>
+                                            <t t-set="item_no" t-value="item_no + 1"/>
+                                        </t>
+                                        <t t-if="line.display_type == 'line_section' and doc.add_child_prod">
+                                            <tr t-attf-style="background-color:#F2F2F2">
+                                                <td style="text-decoration: underline;font-size: 13px;font-family:Arial; font-weight: bold; border: 1px solid black;border-bottom: none!important; padding: 5px;" name="section_no">
+<!--                                                    <span t-field="line.name"/>-->
+                                                </td>
+                                                <td style="font-size: 13px;font-family:Arial; font-weight: bold; border: 1px solid black;border-bottom: none!important; padding: 5px;" name="section_name">
+                                                    <span t-field="line.name"/>
+                                                </td>
+<!--                                                <td style="border: 1px solid black;border-bottom: none!important;" name="section_function"/>-->
+<!--                                                <td style="border: 1px solid black;border-bottom: none!important;" name="section_part_no"/>-->
+                                                <td style="font-size: 13px;font-family:Arial; font-weight: bold; border: 1px solid black;border-bottom: none!important;" name="section_unit" class="text-center">
+<!--                                                    <span>SET</span>-->
+                                                </td>
+                                                <td style="font-size: 13px;font-family:Arial; font-weight: bold; border: 1px solid black;border-bottom: none!important;" name="section_quantity" class="text-center">
+<!--                                                    <span>1</span>-->
+                                                </td>
+                                                <td style="border: 1px solid black;border-bottom: none!important;" name="section_manufacturing"/>
+                                                <td style="font-size: 13px;font-family:Arial;font-weight: bold;border: 1px solid black;border-bottom: none!important;padding: 5px;" name="section_priceunit" class="text-right">
+<!--                                                    <span t-field="line.product_subtotal"/>-->
+                                                </td>
+                                                <td style="font-size: 13px;font-family:Arial;font-weight: bold;border: 1px solid black;border-bottom: none!important;padding: 5px;" name="section_subtotal" class="text-right">
+                                                    <span t-esc="'{0:,.2f}'.format(line.product_subtotal)"/>
+                                                </td>
+
+                                                <!--                                <t t-set="current_section" t-value="line"/>-->
+                                                <!--                                <t t-set="current_subtotal" t-value="0"/>-->
+                                            </tr>
+                                            <t t-set="note_count" t-value="1"/>
+                                        </t>
+                                        <t t-if="line.display_type == 'line_note' and doc.add_child_prod">
+                                            <t t-if="note_count == 0">
+                                                <tr>
+                                                    <td style="border: 1px solid black;border-top: none; border-bottom: none!important;"><br/></td>
+                                                    <td style="border: 1px solid black;border-top: none; border-bottom: none!important;"/>
+<!--                                                    <td style="border: 1px solid black;border-top: none; border-bottom: none!important;"/>-->
+                                                    <td style="border: 1px solid black;border-top: none; border-bottom: none!important;"/>
+                                                    <td style="border: 1px solid black;border-top: none; border-bottom: none!important;"/>
+                                                    <td style="border: 1px solid black;border-top: none; border-bottom: none!important;"/>
+                                                    <td style="border: 1px solid black;border-top: none; border-bottom: none!important;"/>
+                                                    <td style="border: 1px solid black;border-top: none; border-bottom: none!important;"/>
+                                                </tr>
+                                            </t>
+
+                                            <tr t-attf-style="font-weight: bold; font-style: italic;font-size: 11px;font-family:Arial;">
+                                                <td style="border: 1px solid black;border-top: none; border-bottom: none!important; padding: 5px;"/>
+                                                <td style="border: 1px solid black;border-top: none; border-bottom: none!important; padding: 5px;" name="note_name">
+                                                    <span t-field="line.name"/>
+                                                </td>
+<!--                                                <td style="border: 1px solid black;border-top: none; border-bottom: none!important; padding: 5px;"/>-->
+                                                <td style="border: 1px solid black;border-top: none; border-bottom: none!important; padding: 5px;"/>
+                                                <td style="border: 1px solid black;border-top: none; border-bottom: none!important; padding: 5px;"/>
+                                                <td style="border: 1px solid black;border-top: none; border-bottom: none!important; padding: 5px;"/>
+                                                <td style="border: 1px solid black;border-top: none; border-bottom: none!important; padding: 5px;" name="note_priceunit" class="text-right">
+<!--                                                    <span t-field="line.product_subtotal"/>-->
+                                                </td>
+                                                <td style="border: 1px solid black;border-top: none; border-bottom: none!important; padding: 5px;" name="note_subtotal" class="text-right"/>
+                                            </tr>
+                                            <t t-set="note_count" t-value="0"/>
+                                        </t>
+                                        <t t-if="line_last">
+                                            <tr>
+                                                <td style="border: 1px solid black;border-top: none;!important;"><br/></td>
+                                                <td style="border: 1px solid black;border-top: none;!important;"/>
+<!--                                                <td style="border: 1px solid black;border-top: none;!important;"/>-->
+                                                <td style="border: 1px solid black;border-top: none;!important;"/>
+                                                <td style="border: 1px solid black;border-top: none;!important;"/>
+                                                <td style="border: 1px solid black;border-top: none;!important;"/>
+                                                <td style="border: 1px solid black;border-top: none;!important;"/>
+                                                <td style="border: 1px solid black;border-top: none;!important;"/>
+                                            </tr>
+                                            <tr>
+                                                <td style="border: 1px solid black;border-top: none;!important;"/>
+                                                <td style="border: 1px solid black;border-top: none;!important;"/>
+<!--                                                <td style="border: 1px solid black;border-top: none;!important;"/>-->
+                                                <td style="border: 1px solid black;border-top: none;!important;"/>
+                                                <td style="border: 1px solid black;border-top: none;!important;"/>
+                                                <td style="border: 1px solid black;border-top: none;!important;"/>
+                                                <td style="font-family:Arial; font-size: 13px;font-weight: bold;border: 1px solid black;border-top: none;!important;padding: 5px;" class="text-right">
+                                                    Total
+                                                </td>
+                                                <td style="font-family:Arial;font-size: 13px;font-weight: bold;border: 1px solid black;border-top: none;!important;padding: 5px;" class="text-right">
+                                                    <span t-esc="'{0:,.2f}'.format(doc.boq_details_amount_total)"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="footer">
+                    <h4 style="text-transform: uppercase;font-family:Arial;font-size: 11px;font-weight: bold;text-align: center">
+                        <span t-field="doc.company_id.name"/>
+                    </h4>
+                    <h5 style="font-family:Arial;font-size: 11px;text-align: center">High Performance Partnership</h5>
+                    <div style="font-family:Arial;font-size: 11px;" t-if="report_type == 'pdf'" class="text-muted text-center">
+                        Page <span class="page"/> / <span class="topage"/>
+                    </div>
+                    <!--                </div>-->
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <template id="boq_child_withoutpart_withprice">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="thailand_erp_customization.report_boq_withoutpart_withprice_template" t-lang="doc.partner_id.lang"/>
+            </t>
+        </t>
+    </template>
+</odoo>

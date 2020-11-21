@@ -1,0 +1,20 @@
+<odoo>
+    <data>
+        <record id="mrp_bom_form_inherit" model="ir.ui.view">
+            <field name="name">mrp.bom.form.inherit</field>
+            <field name="model">mrp.bom</field>
+            <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='attachments_count']" position="after">
+                    <field name="function"/>
+                </xpath>
+                <xpath expr="//tree/field[@name='product_qty']" position="after">
+                    <field name="product_sales_price"/>
+                </xpath>
+                <xpath expr="//field[@name='product_tmpl_id']" position="after">
+                    <field name="total_price"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

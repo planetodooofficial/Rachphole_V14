@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_view_inherit_add_custom_fields" model="ir.ui.view">
+        <field name="name">sale.view.inherit.add.custom.fields</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_view_invoice']" position="before">
+                <button name="show_job_cost_sheet" type="object" icon="fa-money" class="oe_stat_button"
+                        attrs="{'invisible':['|',('so_type','=', 'trading'), ('show_job_cost','=',False)]}">
+                    <span>Job Cost Sheet</span>
+                </button>
+                <button name="show_purchase_order" type="object" icon="fa-bars" class="oe_stat_button" string="Purchase Order"
+                        attrs="{'invisible':[('state','in',['draft','sent'])]}"/>
+            </xpath>
+
+            <xpath expr="//label[@for='commitment_date']" position="replace">
+                <label for="commitment_date" string="Delivery Date" invisible="1"/>
+            </xpath>
+
+            <xpath expr="//group[@name='sale_shipping']//div" position="replace">
+                <div class="o_row" invisible="1">
+                    <field name="commitment_date"/> <span class="text-muted">Expected: <field name="expected_date" widget="date"/></span>
+                </div>
+                <field name="delivery"/>
+            </xpath>
+            <xpath expr="//group//field[@name='amount_total']" position="after">
+                 <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                    <label for="bom_cost_amount_total" string="Total BOQ Cost"/>
+                </div>
+                <field name="bom_cost_amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                    <label for="total_overhead_cost"/>
+                </div>
+                <field name="total_overhead_cost" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                    <label for="cust_margin"/>
+                </div>
+                <field name="cust_margin" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="margin_percent"/>
+
+            </xpath>
+
+            <xpath expr="//field[@name='amount_untaxed']" position="after">
+                <field name="discount_amt" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="tax_vat_perc" invisible="1"/>
+                <field name="disc_perc" invisible="1"/>
+            </xpath>
+
+            <!--            <xpath expr="//button[@name='action_cancel']" position="after">-->
+            <!--                <button name="create_job_cost_report" string="Create Job Cost Report" type="object" class="oe_highlight"/>-->
+            <!--            </xpath>-->
+
+            <!--            <xpath expr="//notebook" position="after">-->
+            <!--                <group>-->
+            <!--                    <field name="file_name" invisible="1"/>-->
+            <!--                    <field name="excel_file" readonly="1" filename="file_name"/>-->
+            <!--                </group>-->
+            <!--            </xpath>-->
+
+            <xpath expr="//button[@name='action_cancel']" position="after">
+                <button string="(XLS) Reports" type="object" class="oe_highlight" name="create_sale_excel_report"/>
+            </xpath>
+            <xpath expr="//button[@name='action_quotation_send']" position="before">
+                    <button string="Confirm" class="oe_highlight"
+                                type="object" name="open_location_wiz"
+                    />
+            </xpath>
+
+            <xpath expr="//button[@id='action_confirm']"  position="attributes">
+                    <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_confirm']"  position="attributes">
+                    <attribute name="invisible">1</attribute>
+            </xpath>
+
+
+            <!--            <xpath expr="//field[@name='payment_term_id']" position="after">-->
+            <!--                <field name="file_name" invisible="1"/>-->
+            <!--                <field name="excel_file" readonly="1" filename="file_name"/>-->
+            <!--            </xpath>-->
+
+<!--            <xpath expr="//page[@name='order_lines']//tree//field[@name='product_id']" position="before">-->
+<!--                <field name="check_available" />-->
+<!--            </xpath>-->
+            <xpath expr="//page[@name='order_lines']//tree//field[@name='price_unit']" position="after">
+                <field name="after_disc_prod_price" />
+                <field name="po_location" />
+            </xpath>
+             <xpath expr="//field[@name='validity_date']" position="before">
+                <field name="date" invisible="1"/>
+            </xpath>
+
+            <xpath expr="//field[@name='payment_term_id']" position="after">
+                <field name="payment_term_note" invisible="1"/>
+                <field name="show_project" invisible="1"/>
+<!--                <field name="create_project_id" attrs="{'invisible':['|',('so_type','=','trading'), ('show_project','=',False)]}"/>-->
+<!--                <field name="project_id" attrs="{'invisible':['|',('so_type','=','trading'),('show_project','=',False)], 'required': [('so_type', '=', 'service'),('show_project','=',True)]}"/>-->
+                <field name="project_id" attrs="{'invisible':[('so_type','=','trading')],'required': [('so_type', '!=', 'trading')]}"/>
+                <field name="wh_location" invisible="1"/>
+                <field name="quote_name"/>
+                <field name="revision_no"/>
+
+                <label for="warranty_period" string="Warranty Period"/>
+                <div>
+                    <field name="warranty_period" class="oe_inline"/>
+                    <field name="warranty_period_type" class="oe_inline field_rule_type"/>
+                </div>
+            </xpath>
+
+            <xpath expr="//field[@name='partner_id']" position="before">
+                <field name="purchase_order_no" attrs="{'readonly':[('state','not in',['draft','sent'])]}"/>
+                <!--                <field name="trading_order" attrs="{'readonly':[('state','not in',['draft','sent'])]}"/>-->
+                <!--                <field name="service_order" attrs="{'readonly':[('state','not in',['draft','sent'])]}"/>-->
+                <field name="so_type" widget="radio" attrs="{'readonly':[('state','not in',['draft','sent'])]}"/>
+                <field name="show_job_cost" invisible="1"/>
+            </xpath>
+            <xpath expr="//page[@name='order_lines']" position="after">
+                <page name="bill_of_quantities" string="Bill of Quantities" >
+                    <group>
+                        <group>
+                            <field name="bom_multiplier"/><br></br>
+                            <field name="add_child_prod" attrs="{'invisible':[('state','not in',['draft','sent'])]}"/>
+                        </group>
+                        <group>
+<!--                            <button name="add_bom_to_order_lines" type="object" string="Add to Sale order lines" class="btn-primary" attrs="{'invisible':[('state','not in',['draft','sent'])]}"/>-->
+                            <button name="add_bom_to_order_lines" type="object" string="Add to Sale order lines" class="oe_edit_only oe_highlight" attrs="{'invisible':[('state','not in',['draft','sent'])]}"/>
+                        </group>
+                    </group>
+                    <field name="bom_ids" widget="section_and_note_one2many">
+                        <tree editable="bottom">
+                            <control>
+                                <create name="add_product_control" string="Add a product"/>
+                                <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
+                                <!--                                <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>-->
+                            </control>
+                            <field name="display_type" invisible="1"/>
+                            <!--                            <field name="product_id" domain="[('type','=','product')]" attrs="{'required':[('display_type','=', False)]}"/>-->
+                            <field name="product_id" attrs="{'required':[('display_type','=', False),('parent.add_child_prod','=',True)], 'column_invisible':[('parent.add_child_prod','=',False)]}"/>
+                            <field name="bom_product_id" attrs="{'required':[('display_type','=', False),('parent.add_child_prod','=',False)], 'column_invisible':[('parent.add_child_prod','=',True)]}"/>
+                            <field name="bom_product_reference" attrs="{'column_invisible':[('parent.add_child_prod','=',True)]}"/>
+                            <field name="name" widget="section_and_note_text" invisible="0"/>
+                            <field name="product_uom"/>
+                            <field name="po_location"/>
+                            <field name="product_qty"/>
+                            <field name="product_cost_price" string="Cost price"/>
+                            <field name="prod_disc"/>
+                            <field name="after_disc_prod_price"/>
+                            <field name="product_sale_price"/>
+                            <field name="total_price_after_disc"/>
+                            <field name="product_subtotal"/>
+                        </tree>
+                    </field>
+                    <group class="oe_subtotal_footer oe_right" colspan="2" name="bom_amount_total">
+                        <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                            <label for="bom_amount_total"/>
+                        </div>
+                        <field name="bom_amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                            <label for="bom_cost_amount_total"/>
+                        </div>
+                        <field name="bom_cost_amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+
+                    </group>
+                </page>
+
+                <page name="bill_of_quantities_details" string="BOQ Details" invisible="1">
+                    <field name="bom_details_id" widget="section_and_note_one2many">
+                        <tree editable="bottom">
+                            <control>
+                                <create name="add_product_control" string="Add a product"/>
+                                <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
+                                <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
+                            </control>
+                            <field name="display_type" invisible="1"/>
+                            <field name="reference"/>
+                            <field name="product_id" domain="[('type','=','product')]" attrs="{'required':[('display_type','=', False)]}"/>
+                            <field name="name" widget="section_and_note_text" invisible="0"/>
+                            <field name="function"/>
+                            <field name="product_uom"/>
+                            <field name="po_location"/>
+                            <field name="product_qty"/>
+                            <field name="product_cost_price" string="Cost price"/>
+                            <field name="prod_disc"/>
+                            <field name="after_disc_prod_price"/>
+<!--                            <field name="product_sale_price"/>-->
+                            <field name="total_price_after_disc"/>
+                            <field name="product_subtotal"/>
+                        </tree>
+                    </field>
+                    <group class="oe_subtotal_footer oe_right" colspan="2" name="bom_amount_total">
+                        <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                            <label for="boq_details_amount_total"/>
+                        </div>
+                        <field name="boq_details_amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                    </group>
+                </page>
+
+
+                <page name="documets_sale_order" string="Documents" attrs="{'invisible':[('so_type','=','trading')]}">
+                    <group>
+                        <group>
+                            <field name="document_multiplier"/>
+                        </group>
+                        <group>
+<!--                            <button name="add_doc_to_order_lines" type="object" string="Add to Sale order lines" class="btn-primary" attrs="{'invisible':[('state','not in',['draft','sent'])]}"/>-->
+                            <button name="add_doc_to_order_lines" type="object" string="Add to Sale order lines" class="oe_edit_only oe_highlight" attrs="{'invisible':[('state','not in',['draft','sent'])]}"/>
+                        </group>
+
+
+                    </group>
+                    <field name="document_ids">
+                        <tree editable="bottom">
+                            <field name="product_id" domain="[('type','=','service')]"/>
+                            <field name="product_uom"/>
+                            <field name="product_qty"/>
+                            <field name="product_cost_price"/>
+                            <field name="product_sale_price"/>
+                            <field name="line_cost_total"/>
+
+                            <!--                            <field name="days"/>-->
+                            <!--                            <field name="man"/>-->
+                            <!--                            <field name="man_hours"/>-->
+                            <!--                            <field name="hotel"/>-->
+                            <!--                            <field name="allowance"/>-->
+                            <!--                            <field name="car"/>-->
+                            <!--                            <field name="mobilize"/>-->
+                            <field name="line_total"/>
+                        </tree>
+                    </field>
+                    <group class="oe_subtotal_footer oe_right" colspan="2" name="document_total_amount">
+                        <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                            <label for="document_total_amount"/>
+                        </div>
+                        <field name="document_total_amount" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                            <label for="document_total_cost"/>
+                        </div>
+                        <field name="document_total_cost" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+
+                    </group>
+                </page>
+
+                <page name="engineering_lines" string="Engineering Lines" attrs="{'invisible':[('so_type','=','trading')]}">
+                    <group>
+                        <group>
+                            <field name="engineering_multiplier"/>
+                            <field name="show_eng_tax_id"/>
+                        </group>
+                        <group>
+<!--                            <button name="add_engineering_line_to_order_lines" type="object" string="Add to Sale order lines" class="btn-primary" attrs="{'invisible':[('state','not in',['draft','sent'])]}"/>-->
+                            <button name="add_engineering_line_to_order_lines" type="object" string="Add to Sale order lines" class="oe_edit_only oe_highlight" attrs="{'invisible':[('state','not in',['draft','sent'])]}"/>
+                        </group>
+                    </group>
+                    <field name="engineer_lines">
+                        <tree editable="bottom">
+                            <field name="product_id" domain="[('type','=','service')]"/>
+                            <field name="product_uom"/>
+                            <field name="product_qty"/>
+                            <field name="product_cost_price"/>
+                            <field name="tax_id" widget="many2many_tags" attrs="{'column_invisible':[('parent.show_eng_tax_id','=',False)]}"/>
+                            <field name="product_sale_price"/>
+                            <field name="line_cost_total"/>
+
+                            <!--                            <field name="days"/>-->
+                            <!--                            <field name="man"/>-->
+                            <!--                            <field name="man_hours"/>-->
+                            <!--                            <field name="hotel"/>-->
+                            <!--                            <field name="allowance"/>-->
+                            <!--                            <field name="car"/>-->
+                            <!--                            <field name="mobilize"/>-->
+                            <field name="line_total"/>
+                        </tree>
+                    </field>
+                    <group class="oe_subtotal_footer oe_right" colspan="2" name="engineer_amount_total">
+                        <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                            <label for="engineer_amount_total"/>
+                        </div>
+                        <field name="engineer_amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                            <label for="engineer_total_cost"/>
+                        </div>
+                        <field name="engineer_total_cost" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+
+                    </group>
+                </page>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="my_new_paper_format_quote" model="report.paperformat">
+        <field name="name">My custom paperformat</field>
+        <field name="format">Letter</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">92</field>
+        <field name="margin_bottom">30</field>
+        <field name="margin_left">7</field>
+        <field name="margin_right">7</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">88</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <record id="my_new_paper_format" model="report.paperformat">
+        <field name="name">My custom paperformat</field>
+        <field name="format">Letter</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">96</field>
+        <field name="margin_bottom">30</field>
+        <field name="margin_left">7</field>
+        <field name="margin_right">7</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">92</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <record id="boq_new_paper_format" model="report.paperformat">
+        <field name="name">BOQ paperformat</field>
+        <field name="format">Letter</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">10</field>
+        <field name="margin_bottom">20</field>
+        <field name="margin_left">7</field>
+        <field name="margin_right">7</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">10</field>
+        <field name="dpi">90</field>
+    </record>
+
+
+    <record id="seq_sale_order" model="ir.sequence">
+        <field name="name">Sales Order</field>
+        <field name="code">sale.order.custom</field>
+        <field name="prefix">QT</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <record id="sale_order_line_inherit_tree" model="ir.ui.view">
+        <field name="name">sale_order_line_add_column</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="after">
+                <field name="type" invisible="0" required="1"/>
+                <field name="parent_product_id" invisible="1"/>
+            </xpath>
+
+<!--            <xpath expr="//field[@name='order_line']/tree/field[@name='discount']" position="attributes">-->
+<!--                <attribute name="attrs">{'readonly': [('type','=','boq_child')]}</attribute>-->
+<!--            </xpath>-->
+        </field>
+    </record>
+
+
+    <record id="sale.action_report_saleorder" model="ir.actions.report">
+        <field name="paperformat_id" ref="thailand_erp_customization.my_new_paper_format_quote" />
+    </record>
+
+<!--    <record id="sale.action_report_saleorder" model="ir.actions.report">-->
+<!--        <field name="paperformat_id" ref="thailand_erp_customization.my_new_paper_format_quote" />-->
+<!--    </record>-->
+
+<!--    <record id="thailand_erp_customization.action_report_saleorder_without_partno" model="ir.actions.report">-->
+<!--        <field name="paperformat_id" ref="thailand_erp_customization.my_new_paper_format" />-->
+<!--    </record>-->
+
+<!--    <record id="thailand_erp_customization.action_boq_with_partno_price" model="ir.actions.report">-->
+<!--        <field name="paperformat_id" ref="thailand_erp_customization.boq_new_paper_format" />-->
+<!--    </record>-->
+
+<!--    <record id="thailand_erp_customization.action_boq_withoutpart_withoutprice" model="ir.actions.report">-->
+<!--        <field name="paperformat_id" ref="thailand_erp_customization.boq_new_paper_format" />-->
+<!--    </record>-->
+
+<!--    <record id="thailand_erp_customization.action_boq_withoutpart_withprice" model="ir.actions.report">-->
+<!--        <field name="paperformat_id" ref="thailand_erp_customization.boq_new_paper_format" />-->
+<!--    </record>-->
+
+<!--    <record id="thailand_erp_customization.action_boq_withpart_withoutprice" model="ir.actions.report">-->
+<!--        <field name="paperformat_id" ref="thailand_erp_customization.boq_new_paper_format" />-->
+<!--    </record>-->
+
+<!--    <record id="thailand_erp_customization.action_boq_custom" model="ir.actions.report">-->
+<!--        <field name="paperformat_id" ref="thailand_erp_customization.boq_new_paper_format" />-->
+<!--    </record>-->
+
+<!--    <record id="thailand_erp_customization.action_boq_without_partno_custom" model="ir.actions.report">-->
+<!--        <field name="paperformat_id" ref="thailand_erp_customization.boq_new_paper_format" />-->
+<!--    </record>-->
+
+</odoo>
