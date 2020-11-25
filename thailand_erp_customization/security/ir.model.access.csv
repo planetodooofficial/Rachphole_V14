@@ -12,4 +12,6 @@ access_sale.order.loc.wiz,access_sale.order.loc.wiz,model_sale_order_loc_wiz,,1,
 access_sale.order.wiz.line,access_sale.order.wiz.line,model_sale_order_wiz_line,,1,1,1,
 access_job.cost.sale.order,access_job.cost.sale.order,model_job_cost_sale_order,,1,1,1,1
 access_job.cost.purchase.order,access_job.cost.purchase.order,model_job_cost_purchase_order,,1,1,1,1
+access_job_cost_excel_report,access_job.cost.excel.report,model_job_cost_excel_report,,1,1,1,1
+access_job_cost_overhead,access_job.cost.overhead,model_job_cost_overhead,,1,1,1,1
 

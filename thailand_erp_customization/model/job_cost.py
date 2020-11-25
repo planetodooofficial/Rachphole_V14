@@ -27,6 +27,14 @@ class JobCost(models.Model):
                 p_amount += p_order.total_purchase_price
             line.total_purchase_price = p_amount
 
+    @api.depends('sale_overhead_ids.total_overhead_price')
+    def _get_total_overhead_price(self):
+        for line in self:
+            p_amount = 0.0
+            for p_order in line.sale_overhead_ids:
+                p_amount += p_order.total_overhead_price
+            line.total_overhead_price = p_amount
+
     @api.depends('total_sale_price', 'total_purchase_price')
     def _get_job_cost_margin_amount(self):
         for line in self:
@@ -53,11 +61,13 @@ class JobCost(models.Model):
     delivery_date_months = fields.Char()
     sale_order_ids=fields.One2many('job.cost.sale.order','job_id','All Sale Order')
     purchase_order_ids=fields.One2many('job.cost.purchase.order','job_id','All Purchase Order')
+    sale_overhead_ids=fields.One2many('job.cost.overhead','job_id','All Overhead')
 
     excel_file = fields.Binary('Job Cost Excel Report')
     file_name = fields.Char('Excel File')
     total_sale_price=fields.Monetary('Total Subtotal Cost', store=True, compute='_get_total_sale_price')
     total_purchase_price=fields.Monetary('Total Purchase Cost', store=True, compute='_get_total_purchase_price')
+    total_overhead_price=fields.Monetary('Total Overhead Cost', store=True, compute='_get_total_overhead_price')
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True,
                                   default=lambda self: self.env.company.currency_id)
     job_cost_margin=fields.Monetary('Margin', store=True, compute='_get_job_cost_margin_amount')
@@ -1073,11 +1083,49 @@ class JobCost(models.Model):
                         style=xlwt.easyxf('font: name Liberation Sans, bold on,color black; '
                                           'align: horiz center,vert center; '
                                           'border: left thin, top thin, right medium, bottom medium'))
-
-        first_row = 17
+        worksheet.write_merge(17,17, 0, 5, "Sell Price (THB)",
+                              style=xlwt.easyxf('font: name Liberation Sans, bold on,color blue; '
+                                                'align: horiz left; '
+                                                'border: left medium, right medium'))
+        worksheet.write_merge(18, 18, 0, 5, "Customer Payment Terms",
+                              style=xlwt.easyxf('font: name Liberation Sans, bold on,color blue; '
+                                                'align: horiz left; '
+                                                'border: left medium, right medium'))
+        worksheet.write_merge(19, 19, 1, 5, "Portion A Hardware",
+                              style=xlwt.easyxf('font: name Liberation Sans, bold on,color blue; '
+                                                'align: horiz left; '
+                                                'border: left medium, right medium'))
+        worksheet.write_merge(20, 20, 1, 5, "Portion A All Materials",
+                              style=xlwt.easyxf('font: name Liberation Sans,color black; '
+                                                'align: horiz left; '
+                                                'border: left medium, right medium'))
+        worksheet.write_merge(21, 21, 1, 5, "Portion B Engineering",
+                              style=xlwt.easyxf('font: name Liberation Sans, bold on,color blue; '
+                                                'align: horiz left; '
+                                                'border: left medium, right medium'))
+        worksheet.write_merge(22, 22, 1, 5, "Portion A All Overhead Cost",
+                              style=xlwt.easyxf('font: name Liberation Sans,color black; '
+                                                'align: horiz left; '
+                                                'border: left medium, right medium'))
+        worksheet.write(20, 7, str(self.total_sale_price),
+                        style=xlwt.easyxf('font: name Liberation Sans, bold on,color black; '
+                                          'align: horiz center,vert center; '
+                                          'border: left medium, top thin, right thin, bottom medium'))
+        worksheet.write(22, 7, str(self.total_overhead_price),
+                        style=xlwt.easyxf('font: name Liberation Sans, bold on,color black; '
+                                          'align: horiz center,vert center; '
+                                          'border: left medium, top thin, right thin, bottom medium'))
+        first_row = 23
         for row in range(first_row, 31):
             worksheet.write(row, 5, style=xlwt.easyxf('border: right medium'))
             worksheet.write(row, 0, style=xlwt.easyxf('border: left medium'))
+            # worksheet.write(row, 5, style=xlwt.easyxf('border: left medium'))
+            # worksheet.write(row, 5, style=xlwt.easyxf('border: left medium'))
+            # worksheet.write(row, 5, style=xlwt.easyxf('border: left medium'))
+            # worksheet.write(row, 5, style=xlwt.easyxf('border: left medium'))
+            # worksheet.write(row, 5, style=xlwt.easyxf('border: left medium'))
+            # worksheet.write(row, 5, style=xlwt.easyxf('border: left medium'))
+
 
         worksheet.write(31, 5, style=xlwt.easyxf('border: right medium,bottom thin, top thin'))
 
@@ -1102,8 +1150,8 @@ class JobCost(models.Model):
         worksheet.write(31, 6, style=xlwt.easyxf('border: right medium, bottom thin, top thin'))
         worksheet.write(32, 6, style=xlwt.easyxf('border: right medium, bottom medium'))
 
-        for row in range(first_row, 31):
-            worksheet.write(row, 7, style=xlwt.easyxf('border: right thin'))
+        # for row in range(first_row, 31):
+        #     worksheet.write(row, 7, style=xlwt.easyxf('border: right thin'))
 
         worksheet.write(31, 7, style=xlwt.easyxf('border: right thin, bottom thin, top thin'))
         worksheet.write(32, 7, style=xlwt.easyxf('border: right thin, bottom medium'))
@@ -1209,8 +1257,16 @@ class JobCost(models.Model):
                         style=xlwt.easyxf('font: name Liberation Sans, bold on,color black; '
                                           'align: horiz center,vert center; '
                                           'border: left thin, top thin, right medium, bottom medium'))
+        worksheet.write_merge(36, 36, 0, 5, "Cost of Goods",
+                              style=xlwt.easyxf('font: name Liberation Sans, bold on,color blue; '
+                                                'align: horiz left; '
+                                                'border: left medium, right medium'))
+        worksheet.write_merge(37, 37, 0, 5, "Cost of Job Order Goods",
+                              style=xlwt.easyxf('font: name Liberation Sans, bold on,color blue; '
+                                                'align: horiz left; '
+                                                'border: left medium, right medium'))
 
-        first_row = 36
+        first_row = 38
         for row in range(first_row, 68):
             worksheet.write(row, 5, style=xlwt.easyxf('border: right medium'))
             worksheet.write(row, 0, style=xlwt.easyxf('border: left medium'))
@@ -1651,6 +1707,16 @@ class JobCostSaleOrder(models.Model):
     date=fields.Date('Date')
     project_id=fields.Many2one('project.project', 'Project ID')
     total_sale_price=fields.Float('Total Sale Price')
+
+class JobCostOverhead(models.Model):
+
+    _name = 'job.cost.overhead'
+
+    job_id=fields.Many2one('job.cost','Job ID')
+    sale_order_id=fields.Many2one('sale.order','SO')
+    date=fields.Date('Date')
+    project_id=fields.Many2one('project.project', 'Project ID')
+    total_overhead_price=fields.Float('Total Overhead Price')
 
 
 

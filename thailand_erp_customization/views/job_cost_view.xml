@@ -74,6 +74,23 @@
 
                      </group>
                         </page>
+                    <page string="All Overhead">
+                        <field name="sale_overhead_ids">
+                            <tree editable="bottom">
+                                <field name="project_id"/>
+                                <field name="sale_order_id"/>
+                                <field name="date"/>
+                                <field name="total_overhead_price" />
+                            </tree>
+                        </field>
+                         <group class="oe_subtotal_footer oe_right" colspan="2" name="total_sale_price">
+
+                                 <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                                <label for="total_overhead_price"/>
+                            </div>
+                            <field name="total_overhead_price" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                         </group>
+                    </page>
                     <page string="All Purchase Order">
                         <field name="purchase_order_ids">
                             <tree editable="bottom">

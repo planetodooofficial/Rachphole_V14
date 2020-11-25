@@ -63,8 +63,7 @@
             </xpath>
             <xpath expr="//button[@name='action_quotation_send']" position="before">
                     <button string="Confirm" class="oe_highlight"
-                                type="object" name="open_location_wiz"
-                    />
+                                type="object" name="open_location_wiz" attrs="{'invisible': [('state', 'not in', ['draft','sent'])]}"/>
             </xpath>
 
             <xpath expr="//button[@id='action_confirm']"  position="attributes">

@@ -1019,14 +1019,42 @@ class SaleOrderInherit(models.Model):
                                                      'analytic_account_id': self.project_id.analytic_account_id.id if self.project_id.analytic_account_id else False})
             else:
                 if self.project_id:
+                    overhead=0.0
+                    material=0.0
+                    for line in self:
+                        if line.bom_ids:
+                            for bom in line.bom_ids:
+                                material+=bom.product_subtotal
+                        if line.document_ids:
+                            for doc in line.document_ids:
+                                overhead+=doc.line_total
+                        if line.engineer_lines:
+                            for eng in line.engineer_lines:
+                                overhead+=eng.line_total
+
                     job_id=job_cost_sheet.search([('project_id','=',self.project_id.id)])
+                    if not job_id:
+                        job_id = job_cost_sheet.create({'sale_order_id': self.id,
+                                                             'partner_id': self.partner_id.id,
+                                                             'project_id': self.project_id.id,
+                                                    'analytic_account_id': self.project_id.analytic_account_id.id if self.project_id.analytic_account_id else False})
                     if job_id:
-                        self.env['job.cost.sale.order'].create({'project_id':self.project_id.id,
-                                     'sale_order_id':self.id,
-                                     'date':self.date_order,
-                                     'total_sale_price':float(self.amount_total),
-                                    'job_id':job_id.id
-                                     })
+                        if material:
+                            self.env['job.cost.sale.order'].create({'project_id':self.project_id.id,
+                                         'sale_order_id':self.id,
+                                         'date':self.date_order,
+                                         'total_sale_price':float(material),
+                                        'job_id':job_id.id
+                                         })
+                        if overhead:
+                            self.env['job.cost.overhead'].create({'project_id':self.project_id.id,
+                                         'sale_order_id':self.id,
+                                         'date':self.date_order,
+                                         'total_overhead_price':float(overhead),
+                                        'job_id':job_id.id
+                                         })
+
+
         self.show_job_cost = True
         res = super(SaleOrderInherit, self).action_confirm()
 
